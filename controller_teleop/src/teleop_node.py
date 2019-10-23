@@ -24,10 +24,8 @@ def vel_callback(msg):
 	vel_msg.angular.y = 0
 	vel_msg.angular.z = msg.axes[3]
 
-	print("Publishing lin x = ", vel_msg.linear.x, "	ang z = vel_msg.angular.z = ", vel_msg.angular.z)
-
 	pub.publish(vel_msg)
-	
+
 
 if __name__ == '__main__':
 	# Initialize the node

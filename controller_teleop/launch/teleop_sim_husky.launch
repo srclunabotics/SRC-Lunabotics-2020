@@ -8,10 +8,6 @@
 
 	<arg name="world_name" default="$(find husky_sims)/worlds/RMC_terrain.world"/>
 
-	<!-- $(find husky_sims)/worlds/RMC_terrain.world -->
-
-	<!-- $(find husky_gazebo)/worlds/clearpath_playpen.world -->
-
 	<!-- Launch the world in gazebo. Default is Terrain world -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
       <arg name="world_name" value="$(arg world_name)"/>

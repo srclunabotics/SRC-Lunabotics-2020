@@ -5,6 +5,7 @@
     <arg name="y" default="0.0"/>
     <arg name="z" default="1.0"/>
     <arg name="yaw" default="0.0"/>
+	<arg name="js" default="js0"/>
 
 	<arg name="world_name" default="$(find husky_sims)/worlds/RMC_terrain.world"/>
 
@@ -30,7 +31,7 @@
 
 	<!-- joy node -->
   <node respawn="true" pkg="joy" type="joy_node" name="joy" >
-    <param name="dev" type="string" value="/dev/input/js1" />
+    <param name="dev" type="string" value="/dev/input/$(arg js)" />
     <param name="deadzone" value="0.12" />
 	<param name="autorepeat_rate" value="10"/>
   </node>

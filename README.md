@@ -1,3 +1,5 @@
+# NASA Robotic Mining Competition: Lunabotics
+
 The repository is organized into different ROS packages. The repository should be
 in your catkin_ws/src directory to work properly and to stay with the structure.
 

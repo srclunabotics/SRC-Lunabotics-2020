@@ -2,6 +2,7 @@ Package for simulating the clearpath Husky for testing of various algorithms.
 The Husky is very similar in size and mass to our goal robot so it provides a good
 platform for testing different types of control and possibly sensors.
 
+Launch using roslaunch husky_sims arena_husky_bringup.launch
 
 Required packages:
 	Most are listed in here: http://wiki.ros.org/Robots/Husky

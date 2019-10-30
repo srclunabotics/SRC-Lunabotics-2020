@@ -18,13 +18,7 @@ Before using this notebook:
     
     3. override the "path_to_image" and "path_to_library" variables in the notebook to the path for the library you cloned in part 1, and the image locations.
     
-    4. You will need to pip install opencv and others. Or just use the virtual environment I uploaded ('senior_design_env')
-        To use the virtualenv: 
-             1. download it and save it on a location, 
-             2. cd to that location, cd senior_design_env
-             3. $ source bin/activate
-             4. (venv) $ pip install ipykernel
-             5. (venv) $ ipython kernel install --user --name=senior_design_env
+    4. You will need to pip install opencv, numpy, and more. I wanted to upload a virtual env here but apparently is not good practice. Will be uploading instructions to clone my virtual env soon.
              
              
             

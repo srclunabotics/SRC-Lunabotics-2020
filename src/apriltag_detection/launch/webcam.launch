@@ -4,6 +4,9 @@
 	<node pkg="apriltag_detection" type="video_feed.py" name="video_feed_node"></node>
 
 	<!-- Apriltag detector -->
-	<node pkg="apriltag_detection" type="detect_apriltag.py" name="apriltag_detector" output="screen"></node>
+	<node pkg="apriltag_detection" type="detect_apriltag.py" name="apriltag_detector" output="screen">
+		<param name="tag_size" type="double" value=".172"/>
+		<param name="img_topic" type="string" value="camera_img"/>
+	</node>
 
 </launch>

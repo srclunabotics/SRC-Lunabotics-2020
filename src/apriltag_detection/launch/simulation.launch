@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<launch>
+
+	<arg name="x" default="0.0"/>
+	<arg name="y" default="0.0"/>
+	<arg name="z" default="0.0"/>
+	<arg name="yaw" default="0.0"/>
+	<arg name="js" default="js0"/>
+
+	<arg name="tag_size" default=".172"/>
+	<arg name="img_topic" default="camera_img"/>
+
+	<arg name="world_name" default="$(find apriltag_detection)/worlds/april_tag_sim.world"/>
+
+	<!-- Launch the world in gazebo. Default is Terrain world -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="world_name" value="$(arg world_name)"/>
+      <arg name="paused" value="false"/>
+      <arg name="use_sim_time" value="true"/>
+      <arg name="gui" value="true"/>
+      <arg name="headless" value="false"/>
+      <arg name="debug" value="false"/>
+    </include>
+
+	<!-- Spawn Husky in the arena -->
+	<include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+		<arg name="laser_enabled" value="false"/>
+	  <arg name="kinect_enabled" value="true"/>
+		<arg name="x" value="$(arg x)"/>
+		<arg name="y" value="$(arg y)"/>
+		<arg name="z" value="$(arg z)"/>
+	</include>
+
+
+	<!-- joy node -->
+	<node respawn="true" pkg="joy" type="joy_node" name="joy" >
+		<param name="dev" type="string" value="/dev/input/$(arg js)" />
+		<param name="deadzone" value="0.12" />
+		<param name="autorepeat_rate" value="10"/>
+	</node>
+
+	<!-- Teleop node for joy to cmd_vel -->
+  	<node pkg="controller_teleop" type="teleop_node.py" name="teleop_node"/>
+
+  	<!-- Apriltag detector -->
+	<node pkg="apriltag_detection" type="detect_apriltag.py" name="apriltag_detector" output="screen">
+		<param name="tag_size" type="double" value="$(arg tag_size)"/>
+		<param name="img_topic" type="string" value="$(arg img_topic)"/>
+	</node>
+
+</launch>

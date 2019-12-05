@@ -42,16 +42,25 @@ def detect_apriltag(ros_img):
     # img = img.astype(np.uint8)
     img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
 
+    # Get the size of the apriltag from the parameter server
+    # TODO: Possibly move this outside so we aren't constantly pulling from the param server
+    tag_size = rospy.get_param("/apriltag_detector/tag_size")
+
     # Get the list of tags from the detector
-    tags = at_detector.detect(img, estimate_tag_pose=True, camera_params=camera_parameters, tag_size=0.172)
+    tags = at_detector.detect(img, estimate_tag_pose=True, camera_params=camera_parameters, tag_size=tag_size)
     
     # In the future this will be replaced by a for each tag in tags loop to iterata through all the tags
     if tags == []:
         message = "\n\n no tag found"
-    elif len(tags) == 1:
-        message = "\n\n" + str(tags[0].tag_id) + "\n" + str(tags[0].pose_t)
-    elif len(tags) == 2:
-        message = "\n\n" + str(tags[0].tag_id) + "|" + str(tags[0].pose_t) + "\n" + str(tags[1].tag_id) + "|" + str(tags[1].pose_t)
+    # elif len(tags) == 1:
+    #     message = "\n\n" + str(tags[0].tag_id) + "\n" + str(tags[0].pose_t)
+    # elif len(tags) == 2:
+    #     message = "\n\n" + str(tags[0].tag_id) + "|" + str(tags[0].pose_t) + "\n" + str(tags[1].tag_id) + "|" + str(tags[1].pose_t)
+
+    else:
+        message = "\n\n"
+        for tag in tags:
+            message = message + str(tag.tag_id) + ":" + str(tag.pose_t) + "\n\n"
     
     print message
 
@@ -70,8 +79,11 @@ if __name__ == "__main__":
                            decode_sharpening=0.25,
                            debug=0)
 
+    # Get the image topic from the parameter server
+    img_topic = rospy.get_param("/apriltag_detector/img_topic")
+
     # Subscriber that calls the detector callback function every time a new message is received on the topic 
-    rospy.Subscriber("camera_img", Image, detect_apriltag)
+    rospy.Subscriber(img_topic, Image, detect_apriltag)
 
     rospy.spin()
     

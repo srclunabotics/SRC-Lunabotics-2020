@@ -2,16 +2,18 @@
 <launch>
 
 	<arg name="x" default="0.0"/>
-    <arg name="y" default="0.0"/>
-    <arg name="z" default="1.0"/>
-    <arg name="yaw" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="0.0"/>
+  <arg name="yaw" default="0.0"/>
 	<arg name="js" default="js0"/>
 
-	<arg name="world_name" default="$(find husky_sims)/worlds/RMC_terrain.world"/>
+	<arg name="world_name" default="$(find husky_gazebo)/worlds/clearpath_playpen.world"/>
+
+  <!-- $(find husky_sims)/worlds/RMC_terrain.world -->
 
 	<!-- Launch the world in gazebo. Default is Terrain world -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" value="$(arg world_name)"/>
+      <!-- <arg name="world_name" value="$(arg world_name)"/> -->
       <arg name="paused" value="false"/>
       <arg name="use_sim_time" value="true"/>
       <arg name="gui" value="true"/>
@@ -22,7 +24,7 @@
 	<!-- Spawn Husky in the arena -->
 	<include file="$(find husky_gazebo)/launch/spawn_husky.launch">
 		<arg name="laser_enabled" value="true"/>
-	    <arg name="kinect_enabled" value="false"/>
+	  <arg name="kinect_enabled" value="false"/>
 		<arg name="x" value="$(arg x)"/>
 		<arg name="y" value="$(arg y)"/>
 		<arg name="z" value="$(arg z)"/>

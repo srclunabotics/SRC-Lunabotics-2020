@@ -23,10 +23,29 @@ import apriltags3
 # from skimage.color import rgb2gray
 import time
 import rospy
+import math
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
-def detect_apriltag(ros_img):
+# Gets the direct distance from the camera to the april tag as well as the offset angle
+def getDistAndAngle(x, y, z):
+
+    # Calculate the offset angle in degrees from the center of the tag to the camera
+    angle = math.degrees(math.atan2(x, z))
+
+    # Calculate first hypotenuse
+    hypot1 = math.hypot(x, z)
+
+    # Get the direct distance from the camera to the tag
+    distance = math.hypot(hypot1, y)
+
+    return distance, angle
+
+    
+    
+
+# Function to detect any apiltags in a passed in image
+def detectApriltag(ros_img):
     # Define the camera parameter that the detector needs
     # TODO: Find a better way to do this
     camera_parameters = [680.9565272862395, 678.9601430884998, 320.50156915761715, 233.43506067483017]
@@ -60,7 +79,10 @@ def detect_apriltag(ros_img):
     else:
         message = "\n\n"
         for tag in tags:
-            message = message + str(tag.tag_id) + ":" + str(tag.pose_t) + "\n\n"
+            # Get the distance and angle offset from the camera to the tag
+            distance, angle = getDistAndAngle(x = tag.pose_t[0], y = tag.pose_t[1], z = tag.pose_t[2])
+
+            message = message + str(tag.tag_id) + ":" + str(tag.pose_t) + "\n" + "Distance = " + str(distance) + "\n" + "Angle = " + str(angle) + "\n\n"
     
     print message
 
@@ -83,7 +105,7 @@ if __name__ == "__main__":
     img_topic = rospy.get_param("/apriltag_detector/img_topic")
 
     # Subscriber that calls the detector callback function every time a new message is received on the topic 
-    rospy.Subscriber(img_topic, Image, detect_apriltag)
+    rospy.Subscriber(img_topic, Image, detectApriltag)
 
     rospy.spin()
     

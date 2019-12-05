@@ -4,8 +4,17 @@ import sys
 import os
 import cv2
 import numpy as np
-path_to_library = '../apriltags3-py' #Paste here the path to apriltags3-py you cloned
+
+# Get the current directory of the file
+dir_path = os.path.dirname(os.path.realpath(__file__))
+# Remove the src from the end so we're in the directory above
+dir_path = dir_path[:-3]
+
+# Create the path to the library 
+path_to_library = dir_path + 'apriltags3-py' #Paste here the path to apriltags3-py you cloned
+# Add the path to the system path so the interpreter can find the library
 sys.path.insert(1, path_to_library)
+
 import cv2
 import argparse
 from matplotlib import pyplot as plt

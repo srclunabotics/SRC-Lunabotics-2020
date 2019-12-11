@@ -495,4 +495,4 @@ qtcreator-*
 CATKIN_IGNORE
 
 # End of https://www.gitignore.io/api/git,c++,ros,latex,python
-
+src/zed-ros-wrapper/

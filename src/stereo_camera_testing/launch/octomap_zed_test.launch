@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </include>
 
     <!-- Launch rivz display -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find zed_display_rviz)/rviz/$(arg camera_model).rviz" output="screen" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find stereo_camera_testing)/rviz/zedm_octomap.rviz" output="screen" />
 
   <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
     <param name="resolution" value="0.03" />

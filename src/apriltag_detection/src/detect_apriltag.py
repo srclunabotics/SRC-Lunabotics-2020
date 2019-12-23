@@ -27,21 +27,53 @@ import math
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
+# Global variable containing the location in the arena of the tags
+tag_locations = {
+                9: (0, 0),
+                10: (0, .1)
+                }
+
+
 # Gets the direct distance from the camera to the april tag as well as the offset angle
-def getDistAndAngle(x, y, z):
+def getAngleCorrection(x_cam, y_cam, z_cam, pose_R):
+    """Calculates the correction angle the robot must assume to head towards the tag"""
+    angle_correction_to_tag = math.degrees(math.atan2(x_cam, z_cam))
+    return angle_correction_to_tag
 
-    # Calculate the offset angle in degrees from the center of the tag to the camera
-    angle = math.degrees(math.atan2(x, z))
 
+def getThetas(pose_R):
+    """Returns the angles between the tag and the camera.
+    theta_x controls the height of the camera
+    theta_y controls the left and right movement
+    theta_z controls the tilt of the camera side to side"""
+    theta_x = math.atan2(pose_R[2][1], pose_R[2][2])
+    theta_y = math.atan2(-pose_R[2][0], math.sqrt( (pose_R[2][1])**2 + (pose_R[2][2])**2 ) )
+    theta_z = math.atan2(pose_R[1][0], pose_R[0][0])
+    return theta_x, theta_y, theta_z
+
+
+def getRobotLocation(theta_x, theta_y, theta_z, distance, tag_locations, tag):
+    """Uses eucledian distance between robot and tag, and angle theta_y to obtain the distance to the tag.
+    Combine distance to tag with position of tag to obtain approx coordinates of robot's location."""
+    tag_location_x, tag_location_z = tag_locations[int(tag.tag_id)]
+    to_tag_z = distance * math.cos(theta_y)
+    # print("to tag z" , to_tag_z)
+    to_tag_x = distance * math.sin(theta_y)
+    # print("to tag x", to_tag_x)
+
+    # Get the estimated robot position based off its distance from the apriltags
+    est_robot_x = tag_location_x + to_tag_x
+    est_robot_z = tag_location_z + to_tag_z
+
+    return est_robot_x, est_robot_z
+
+
+def getDistances(x_cam, y_cam, z_cam):
     # Calculate first hypotenuse
-    hypot1 = math.hypot(x, z)
-
+    hypot1 = math.hypot(x_cam, z_cam)
     # Get the direct distance from the camera to the tag
-    distance = math.hypot(hypot1, y)
-
-    return distance, angle
-
-    
+    eucledian_distance = math.hypot(hypot1, y_cam)
+    return eucledian_distance
     
 
 # Function to detect any apiltags in a passed in image
@@ -71,19 +103,27 @@ def detectApriltag(ros_img):
     # In the future this will be replaced by a for each tag in tags loop to iterata through all the tags
     if tags == []:
         message = "\n\n no tag found"
-    # elif len(tags) == 1:
-    #     message = "\n\n" + str(tags[0].tag_id) + "\n" + str(tags[0].pose_t)
-    # elif len(tags) == 2:
-    #     message = "\n\n" + str(tags[0].tag_id) + "|" + str(tags[0].pose_t) + "\n" + str(tags[1].tag_id) + "|" + str(tags[1].pose_t)
-
     else:
         message = "\n\n"
         for tag in tags:
-            # Get the distance and angle offset from the camera to the tag
-            distance, angle = getDistAndAngle(x = tag.pose_t[0], y = tag.pose_t[1], z = tag.pose_t[2])
+            x_cam = tag.pose_t[0]
+            y_cam = tag.pose_t[1]
+            z_cam = tag.pose_t[2]
 
-            message = message + str(tag.tag_id) + ":" + str(tag.pose_t) + "\n" + "Distance = " + str(distance) + "\n" + "Angle = " + str(angle) + "\n\n"
-    
+            # Get the angle offset from the camera to the tag, and the correction to arrive at tag
+            angle_correction_to_tag = getAngleCorrection(x_cam ,y_cam, z_cam, pose_R=tag.pose_R)
+            distance = getDistances(x_cam, y_cam, z_cam)
+            theta_x, theta_y, theta_z = getThetas(tag.pose_R)
+            robot_x, robot_z = getRobotLocation(theta_x, theta_y, theta_z, distance, tag_locations, tag)
+        
+            theta_msg = "\n\ttheta_x = " + str(theta_x) + "\n\ttheta_y = " + str(theta_y) + "\n\ttheta_z = " + str(theta_z)
+
+            path_msg = "\n\tDistance = " + str(tag.pose_t[2]) + " meters" + "\n\tAngle correction to tag = " + str(round(angle_correction_to_tag, 2))
+
+            robot_location_msg = "\n\tRobot location est: " + "robot_x = " + str(round(robot_x, 3)) + " robot_z = " + str(round(robot_z,3))
+            # message = message + str(tag.tag_id) + ":" + str(tag.pose_t) + "\n" + "RotMat = \n" + str(tag.pose_R) + "\n dot prod = \n" + str(test_translation) + "\n Distance = " + str(distance) + "\n" + "Angle = " + str(angle) + "\n\n"
+            message = message + "\n\nTag ID = " + str(tag.tag_id) + ": " + theta_msg + path_msg + robot_location_msg
+            
     print message
 
 
@@ -109,48 +149,5 @@ if __name__ == "__main__":
 
     rospy.spin()
     
-    
-    
-    # key = cv2.waitKey(1)
-    # webcam = cv2.VideoCapture(0)
-    # camera_parameters = [680.9565272862395, 678.9601430884998, 320.50156915761715, 233.43506067483017]
-
-    #     # Detector parameters explained in https://github.com/duckietown/apriltags3-py
-    # at_detector = apriltags3.Detector(searchpath=[str(path_to_library)+'/apriltags/lib'], 
-    #                        families='tag36h11',
-    #                        nthreads=1,
-    #                        quad_decimate=1.0,
-    #                        quad_sigma=0.0,
-    #                        refine_edges=1,
-    #                        decode_sharpening=0.25,
-    #                        debug=0)
-
-    # i=0
-    # while True:
-    #     check, frame = webcam.read()
-    #     cv2.imshow("Capturing", frame)
-    #     key = cv2.waitKey(1)
-    #     detect_apriltag(frame, camera_parameters)   
-    #     # print(tags)
-    #     # time.sleep(1)
-
-        
-    #     if key == ord('s'): 
-    #         cv2.imwrite(filename='calibration_images/webcam/new_images/saved_img.jpg', img=frame)
-    #         webcam.release()
-
-    #         cv2.destroyAllWindows()
-
-    #         print("Image saved!")
-    #         break
-            
-        
-    #     elif key == ord('q'):
-    #         print("Turning off camera.")
-    #         webcam.release()
-    #         print("Camera off.")
-    #         print("Program ended.")
-    #         cv2.destroyAllWindows()
-    #         break
 
             

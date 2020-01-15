@@ -7,8 +7,9 @@
 	<arg name="yaw" default="0.0"/>
 	<arg name="js" default="js0"/>
 
-	<arg name="tag_size" default=".172"/>
-	<arg name="img_topic" default="camera_img"/>
+	<!-- Tag size is in meters. Use .172 for tags printed on normall 8x11 and 1 for the big apriltags used in simulation -->
+	<arg name="tag_size" default="1"/>
+	<arg name="img_topic" default="/camera/rgb/image_raw"/>
 
 	<arg name="world_name" default="$(find apriltag_detection)/worlds/april_tag_sim.world"/>
 

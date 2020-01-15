@@ -27,10 +27,25 @@ import math
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
-# Global variable containing the location in the arena of the tags
+# Global variable containing the location in the arena of the tags (x, z)
+# IMNPORTANT: At the moment in the gazebo sim the axes don't math up with the axis of the 
+# apriltag. Please refer to the table below to match axes between the world and the tag to
+# get the correct locations of the tags
+"""
+    Apriltag axes       World axes
+    x                   y
+    y                   z
+    z                   x
+
+"""
+# tag_locations = {
+#                 3: (1.57, 3.92),
+#                 8: (0.02, 2.02),
+#                 15: (-1.47, 3.01)
+#                 }
+
 tag_locations = {
-                9: (0, 0),
-                10: (0, .1)
+                8: (0, 0)                
                 }
 
 

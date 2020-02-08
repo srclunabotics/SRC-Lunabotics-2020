@@ -15,7 +15,6 @@ path_to_library = dir_path + 'apriltags3-py' #Paste here the path to apriltags3-
 # Add the path to the system path so the interpreter can find the library
 sys.path.insert(1, path_to_library)
 
-import cv2
 import argparse
 from matplotlib import pyplot as plt
 import apriltag
@@ -45,7 +44,7 @@ from cv_bridge import CvBridge, CvBridgeError
 #                 }
 
 tag_locations = {
-                8: (0, 0)                
+                10: (0, 0)                
                 }
 
 
@@ -95,7 +94,7 @@ def getDistances(x_cam, y_cam, z_cam):
 def detectApriltag(ros_img):
     # Define the camera parameter that the detector needs
     # TODO: Find a better way to do this
-    camera_parameters = [680.9565272862395, 678.9601430884998, 320.50156915761715, 233.43506067483017]
+    camera_parameters = [634.7421143901029, 638.4339498290706, 316.5133740410524, 217.848671299271] #[680.9565272862395, 678.9601430884998, 320.50156915761715, 233.43506067483017]
 
     # CvBridge object for converting image types
     bridge = CvBridge()

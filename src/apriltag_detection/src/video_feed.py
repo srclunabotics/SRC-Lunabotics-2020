@@ -13,7 +13,7 @@ if __name__ == '__main__':
 	vid_pub = rospy.Publisher('/camera_img', Image, queue_size=1)
 
 	# Open the web camera
-	camera = cv2.VideoCapture(0)
+	camera = cv2.VideoCapture(1)
 
 	while(1):
 		# Grab a frame from the webcam

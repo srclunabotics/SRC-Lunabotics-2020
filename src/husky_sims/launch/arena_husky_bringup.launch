@@ -24,6 +24,7 @@
 
   <!-- Spawn Husky in the arena -->
   <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+    <arg name="robot_namespace" value="husky"/>
     <arg name="laser_enabled" value="true"/>
     <arg name="kinect_enabled" value="true"/>
     <!-- <arg name="camera_enabled" value="true"/> -->

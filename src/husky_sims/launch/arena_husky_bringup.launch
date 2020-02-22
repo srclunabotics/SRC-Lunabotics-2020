@@ -1,44 +1,41 @@
 <?xml version="1.0"?>
 <launch>
 
-	<arg name="x" default="0.0"/>
-    <arg name="y" default="0.0"/>
-    <arg name="z" default="0.0"/>
-    <arg name="yaw" default="0.0"/>
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="0.0"/>
+  <arg name="yaw" default="0.0"/>
 
-	<arg name="world_name" default="$(find husky_gazebo)/worlds/clearpath_playpen.world"/>
+  <!-- Set world name to be lunabotics arena -->
+  <arg name="world_name" default="$(find husky_sims)/worlds/lunabotics_arena.world"/>
 
-	<!-- $(find husky_sims)/worlds/RMC_terrain.world -->
+  <!-- Launch the world in gazebo. Default is Terrain world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
 
-	<!-- $(find husky_gazebo)/worlds/clearpath_playpen.world -->
+  <!-- Spawn Husky in the arena -->
+  <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+    <!-- <arg name="robot_namespace" value="husky"/> -->
+    <arg name="laser_enabled" value="true"/>
+    <arg name="kinect_enabled" value="true"/>
+    <!-- <arg name="camera_enabled" value="true"/> -->
+    <arg name="x" value="$(arg x)"/>
+    <arg name="y" value="$(arg y)"/>
+    <arg name="z" value="$(arg z)"/>
+  </include>
 
-	<!-- Launch the world in gazebo. Default is Terrain world -->
-    <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" value="$(arg world_name)"/>
-      <arg name="paused" value="false"/>
-      <arg name="use_sim_time" value="true"/>
-      <arg name="gui" value="true"/>
-      <arg name="headless" value="false"/>
-      <arg name="debug" value="false"/>
-    </include>
+  <include file="$(find husky_viz)/launch/view_robot.launch"/>
 
-	<!-- Spawn Husky in the arena -->
-	<include file="$(find husky_gazebo)/launch/spawn_husky.launch">
-		<arg name="laser_enabled" value="true"/>
-	    <arg name="kinect_enabled" value="false"/>
-		<!-- <arg name="camera_enabled" value="true"/> -->
-		<arg name="x" value="$(arg x)"/>
-		<arg name="y" value="$(arg y)"/>
-		<arg name="z" value="$(arg z)"/>
-	</include>
+  <!--- Run gmapping -->
+  <include file="$(find husky_navigation)/launch/gmapping.launch" />
 
-
-	<include file="$(find husky_viz)/launch/view_robot.launch"/>
-
-	<!--- Run gmapping -->
-    <include file="$(find husky_navigation)/launch/gmapping.launch" />
-
-    <!--- Run Move Base -->
-    <include file="$(find husky_navigation)/launch/move_base.launch" />
+  <!--- Run Move Base -->
+  <include file="$(find husky_navigation)/launch/move_base.launch" />
 
 </launch>

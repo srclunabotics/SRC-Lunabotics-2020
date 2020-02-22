@@ -62,10 +62,17 @@
   <exec_depend>rospy</exec_depend>
   <exec_depend>tf</exec_depend>
 
-
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>gazebo_ros_control</exec_depend>
+  
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
+
+    <!-- gazebo_ros_paths_plugin automatically adds these to
+         GAZEBO_PLUGIN_PATH and GAZEBO_MODEL_PATH when you do this export inside
+         the package.xml file. You can than use URIs of type model://my_package/stuff. -->
+    <gazebo_ros gazebo_model_path="${prefix}/models" />
 
   </export>
 </package>

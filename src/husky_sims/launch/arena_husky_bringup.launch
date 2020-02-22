@@ -6,11 +6,8 @@
   <arg name="z" default="0.0"/>
   <arg name="yaw" default="0.0"/>
 
-  <arg name="world_name" default="$(find husky_gazebo)/worlds/clearpath_playpen.world"/>
-
-  <!-- $(find husky_sims)/worlds/RMC_terrain.world -->
-
-  <!-- $(find husky_gazebo)/worlds/clearpath_playpen.world -->
+  <!-- Set world name to be lunabotics arena -->
+  <arg name="world_name" default="$(find husky_sims)/worlds/lunabotics_arena.world"/>
 
   <!-- Launch the world in gazebo. Default is Terrain world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -32,7 +29,6 @@
     <arg name="y" value="$(arg y)"/>
     <arg name="z" value="$(arg z)"/>
   </include>
-
 
   <include file="$(find husky_viz)/launch/view_robot.launch"/>
 

@@ -6,8 +6,8 @@
       <collision name="collision">
         <geometry>
           <heightmap>
-            <uri>model://mining_area_heightmap/materials/textures/heightmap.png</uri>
-            <size>200 200 100</size>
+            <uri>model://mining_area_heightmap/materials/textures/heightmap_gravel2.png</uri>
+            <size>10 10 0.25</size>
             <pos>0 0 0</pos>
           </heightmap>
         </geometry>
@@ -29,9 +29,10 @@
               <min_height>4</min_height>
               <fade_dist>5</fade_dist>
             </blend>
-            <uri>model://mining_area_heightmap/materials/textures/heightmap.png</uri>
-            <size>200 200 100</size>
+            <uri>model://mining_area_heightmap/materials/textures/heightmap_gravel2.png</uri>
+            <size>10 10 0.25</size>
             <pos>0 0 0</pos>
+            <!-- Pos z value should sum with z of size above to equal 0 -->
           </heightmap>
         </geometry>
       </visual>
